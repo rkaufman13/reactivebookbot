@@ -33,8 +33,8 @@ function randomDate(start,end){
     }
 
 function randomDateYYYYMMDD(){
-const start = new Date(1995,0,1);
-const end = new Date(2015,11,31);
+const start = new Date(2009,0,1);
+const end = new Date(2018,11,31);
 const arandomDate = randomDate(start,end)
 return arandomDate;
 
