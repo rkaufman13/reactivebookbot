@@ -77,7 +77,7 @@ const booklistsize = Object.keys(obj).length;
 
 //take the object which contains 10x titles and authors and scrape the DC library website with them one at a time
   async searchDCPL(booksfromNYT,index){
-      const url = 'https://catalog.dclibrary.org/client/en_US/dcpl/search/results?qf=FORMAT%09Format%09E_BOOK%09eBook+%7C%7C+BOOK%09Book&qu=';
+      const url = 'https://agile-shore-84186.herokuapp.com/https://catalog.dclibrary.org/client/en_US/dcpl/search/results?qf=FORMAT%09Format%09E_BOOK%09eBook+%7C%7C+BOOK%09Book&qu=';
       let bookTitle = booksfromNYT[index].title;
       bookTitle = bookTitle.split(" ");
       bookTitle = bookTitle.join("+");
