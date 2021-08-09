@@ -91,33 +91,47 @@ const booklistsize = Object.keys(obj).length;
   
   }
   //now walk through the DCLibrary DOM to find the information we need
-async parsebooks(result, index){
+async parsebooks(result, index, booksfromNYT){
       const parser = new DOMParser();
       const dom = parser.parseFromString(result,"text/html")
+      console.log(dom);
       let DCLibraryparams = {};
-     
-     const holdscount = dom.window.document.getElementsByClassName('holdsCountNumber')[0].innerHTML;
-     //now we check to make sure it's not too popular
-     if (holdscount < 5){
-     const authorBackwards = dom.window.document.getElementsByClassName('searchlink')[0].getElementsByTagName('a')[0].innerHTML;
-     const format = dom.window.document.getElementsByClassName('formatText')[0].innerHTML;
-     const bookUrl = dom.window.document.getElementsByClassName('detailLink')[0].getAttribute('href');
-     const ISBN = dom.window.document.getElementsByClassName('isbnValue')[0].getAttribute('value')
-     let author = reverseAuthor(authorBackwards).trim();
+      let available;
+      let currentBooks = booksfromNYT;    
+     //now we check to make sure it's not too popular     
+     const holdscount = dom.getElementsByClassName('holdsCountNumber')[0].innerHTML;
+     console.log(holdscount);
+     if (!holdscount){
+        available = dom.getElementsByClassName('availableNumber')[0].innerHTML;
+        console.log(available);
+     }
+     if (holdscount < 5 || available > 0){
+     const authorBackwards = dom.getElementsByClassName('searchlink')[0].getElementsByTagName('a')[0].innerHTML;
+      //check to make sure we have the right book (sometimes DCPL search just gives us crazy results)
+      let author = reverseAuthor(authorBackwards).trim();
+      if (!Object.values(booksfromNYT[index]).includes(author)){
+        //don't continue
+       return currentBooks;
+      }
+     const format = dom.getElementsByClassName('formatText')[0].innerHTML;
+     const bookUrl = dom.getElementsByClassName('detailLink')[0].getAttribute('href');
+     const ISBN = dom.getElementsByClassName('isbnValue')[0].getAttribute('value')
      console.log(holdscount,author,format,bookUrl)  
-     const currentBooks = this.state.books;    
-     DCLibraryparams = {'DCHolds': holdscount, 'DCUrl':bookUrl, 'ISBN': ISBN}
+     DCLibraryparams = {'DCHolds': holdscount, 'DCUrl':bookUrl, 'ISBN': ISBN, 'DCAvail':available}
      const intermediateBookObj = Object.assign(currentBooks[index], DCLibraryparams)
      currentBooks[index] = intermediateBookObj;
-    //  this.setState({books:currentBooks})
-    //  console.log(this.state.books)
-    return currentBooks;
+    console.log(currentBooks)
+     return currentBooks;
+    
      }
+     else {
+       return currentBooks;
+      }
      }
   
   
   async main(){
-  let matchedBooks = {};
+  let matchedBooks = [];
   
   //get json from pinging NYT
   const jsonString = await this.findAListOfBooks();
@@ -126,10 +140,12 @@ async parsebooks(result, index){
   const booksfromNYT = await this.parseNYTBooks(jsonString);
   
   for(let i = 0; i<10; i++){
+    console.log(`matchedBooks before going to DCPL: ${matchedBooks}`)
       if (!(matchedBooks.length) || matchedBooks.length<3){
-        console.log('inside DCPL loop, now what')
+        console.log('inside DCPL loop for the ' + i + 'th time, now what')
   let matchedBookDOM = await this.searchDCPL(booksfromNYT, i);
-  matchedBooks = this.parsebooks(matchedBookDOM, i);
+  matchedBooks = await this.parsebooks(matchedBookDOM, i, booksfromNYT);
+  console.log(matchedBooks)
       }
   }
   
