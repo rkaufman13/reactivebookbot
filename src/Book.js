@@ -1,12 +1,13 @@
 import React from 'react';
 import './Book.css';
-import './placeholder.jpg'
+import './placeholder.png'
 
 class Book extends React.Component{
 constructor(props){
   super(props)
   this.getCover = this.getCover.bind(this)
   this.handleImageLoad = this.handleImageLoad.bind(this)
+  this.getLibraryUrl = this.getLibraryUrl.bind(this)
   
 }
 getCover(){
@@ -16,9 +17,19 @@ getCover(){
 handleImageLoad(){
   for (let i = 0; i<document.getElementsByClassName('cover').length;i++){
     if (document.getElementsByClassName('cover')[i].width===1){
-      document.getElementsByClassName('cover')[i].src = "placeholder.jpg"
+      document.getElementsByClassName('cover')[i].src = "placeholder.png"
     }
   }
+}
+
+getLibraryUrl(){
+  const url = 'https://catalog.dclibrary.org/client/en_US/dcpl/search/results?qf=FORMAT%09Format%09E_BOOK%09eBook+%7C%7C+BOOK%09Book&qu=';
+  let bookTitle = this.props.book.title;
+  bookTitle = bookTitle.split(" ");
+  bookTitle = bookTitle.join("+");
+  const query = bookTitle;
+  const endpoint = `${url}${query}`
+return endpoint;
 }
 
 render(){
@@ -28,9 +39,8 @@ render(){
     <img src={this.getCover()} alt={this.props.book.title}  onLoad={this.handleImageLoad} className="cover"/>
     <br/>
     <p>{this.props.book.author}</p>
-    <p>NY Times Bestseller for DATE, rank: {this.props.book.NYTRank}</p>
-    <p>Holds at the DC Library: {this.props.book.DCHolds} (<a href={this.props.book.DCUrl}>Go reserve it</a>)</p>
-    <p>Description: {this.props.book.description || "No description available"}</p>
+    <p>(<a href={this.getLibraryUrl()}>Search DCPL for this book</a>)</p>
+    <p>{this.props.book.description || "No description available"}</p>
     <p>Number of pages: {this.props.book.numPages || "Not available"}</p>
 
 </div>

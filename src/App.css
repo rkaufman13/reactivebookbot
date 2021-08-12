@@ -10,7 +10,7 @@ transform: translateX(-50%);
 }
 
 .logo-container{
-  height:200px;
+  max-height:200px;
   width:200px;
   overflow:hidden;
   position:relative;
@@ -57,10 +57,14 @@ button {
     background-color: rgba(73, 138, 96, 0.7);
   }
 
-.Results {
+.bookResults {
   display:flex;
   justify-content: center;
   padding-top:2rem;
   min-height:500px;
   flex-wrap:wrap;
+}
+
+.Results{
+  padding-top:2rem;
 }

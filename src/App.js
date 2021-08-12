@@ -4,7 +4,7 @@ import './App.css';
 import Results from './Results'
 
 //import helper functions here
-import {titleCase, reverseAuthor, randomDateYYYYMMDD} from "./helpers.js"
+import {titleCase, reverseAuthor, randomDateYYYYMMDD,shortenDescription} from "./helpers.js"
 
 const api = 'fz5eh6lFVdKu8o8S5MEDJ2Ap6pIp6Cla'
   const url = 'https://api.nytimes.com/svc/books/v3/lists/'
@@ -64,7 +64,7 @@ const booklistsize = Object.keys(obj).length;
       let bookTitle = titleCase(obj.results.books[i].title);
       let bookAuthor = obj.results.books[i].author;
       let rank = obj.results.books[i].rank;
-      let isbn = obj.results.books[i].isbns[0].isbn13;
+      let isbn = obj.results.books[i].primary_isbn13;
     //  //put in title case because formatting
        bookTitle = titleCase(bookTitle);
       basicbookdata[i] = {'title': bookTitle, 'author': bookAuthor, 'NYTRank': rank, 'ISBN':isbn};
@@ -75,7 +75,7 @@ const booklistsize = Object.keys(obj).length;
 
 //take the object which contains 10x titles and authors and scrape the DC library website with them one at a time
   async searchDCPL(booksfromNYT,index){
-      const url = 'https://agile-shore-84186.herokuapp.com/https://catalog.dclibrary.org/client/en_US/dcpl/search/results?qf=FORMAT%09Format%09E_BOOK%09eBook+%7C%7C+BOOK%09Book&qu=';
+      const url = 'https://catalog.dclibrary.org/client/en_US/dcpl/search/results?qf=FORMAT%09Format%09E_BOOK%09eBook+%7C%7C+BOOK%09Book&qu=';
       let bookTitle = booksfromNYT[index].title;
       bookTitle = bookTitle.split(" ");
       bookTitle = bookTitle.join("+");
@@ -167,6 +167,9 @@ const OLurl = `https://openlibrary.org${OLid}.json`;
     const olJSON = await response.json();
     try {
     description = olJSON.description.value;
+    if (description.length>200){
+      description = shortenDescription(description)
+    }
     }
     catch(err) {
       description = '';
@@ -194,18 +197,18 @@ const OLurl = `https://openlibrary.org${OLid}.json`;
       <header className="App-header">
         <div className="logo-container"><img src={logo} className="App-logo" alt="bookbot logo" /></div>
         <p>
-        Need help finding a book to read? Bookbot is here. 
+        Explore a random week from the NYT Bestsellers list.
         </p>
       </header>
 
       <div className="main">
     <section className="Instructions">
-      <p>Click the button to find some books. All are guaranteed to have fewer than 5 holds at the DC Public Library.</p>
+      <p>Click the button to be taken to a random date and see what the best-selling books were of that week!</p>
     </section>
     <section className="button">
-      <button onClick={this.main}>Gimme some books</button>
+      <button onClick={this.main}>Time machine...GO!</button>
     </section>
-    <Results className="Results" Books={this.state.books}>
+    <Results className="Results" Books={this.state.books} date={this.state.date}>
     </Results>
     </div>
     

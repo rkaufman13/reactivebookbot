@@ -41,6 +41,11 @@ return arandomDate;
 
 }
 
+function shortenDescription(desc){
+    let shortDesc = desc.substring(0,200);
+    shortDesc = shortDesc+ "...";
+    return shortDesc;
+}
 
 
-export {titleCase,reverseAuthor, randomDateYYYYMMDD}
+export {titleCase,reverseAuthor, randomDateYYYYMMDD,shortenDescription}

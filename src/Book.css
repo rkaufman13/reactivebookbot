@@ -1,6 +1,8 @@
 .bookresult {
     background-color: #011f0c;
     padding:2rem;
+    margin:.5rem;
+    max-width: 215px;
 }
 
 a {
