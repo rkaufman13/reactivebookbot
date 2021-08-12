@@ -21,10 +21,10 @@ function reverseAuthor(authorBackwards){
 }
 
 function randomDate(start,end){
-        var d = new Date(start.getTime() + Math.floor(Math.random()) * (end.getTime() - start.getTime())),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
+    var d = new Date(Math.floor(Math.random()*(end.getTime()-start.getTime())+start.getTime()));
+           let month = '' + (d.getMonth() + 1);
+           let day = '' + d.getDate();
+           const year = d.getFullYear();
     
         if (month.length < 2) month = '0' + month;
         if (day.length < 2) day = '0' + day;
@@ -36,6 +36,7 @@ function randomDateYYYYMMDD(){
 const start = new Date(2009,0,1);
 const end = new Date(2018,11,31);
 const arandomDate = randomDate(start,end)
+
 return arandomDate;
 
 }

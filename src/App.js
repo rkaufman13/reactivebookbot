@@ -18,9 +18,7 @@ class App extends React.Component {
     super(props)
     this.state = {
       books: [
-        // {title:'Djinn Patrol on the Purple Line', author:'Deepa Anappara', NYTRank: 1, DCHolds: 3, ISBN: 9780593129197, DCUrl: 'https://catalog.dclibrary.org/client/en_US/dcpl/search/detailnonmodal/ent:$002f$002fERC_222_3048$002f0$002f222_3048:OVERDRIVE:d7f3cfad-d675-47a2-8990-65ce544d5ec1/ada?qu=djinn+patrol+on+the+purple+line&d=ent%3A%2F%2FERC_222_3048%2F0%2F222_3048%3AOVERDRIVE%3Ad7f3cfad-d675-47a2-8990-65ce544d5ec1%7EERC_ST_DCPL%7E1&h=8'},
-        // {title:'Such a Fun Age', author:'Kiley Reid', NYTRank: 5, DCHolds: 0, ISBN: 9780525541912, DCUrl: 'https://catalog.dclibrary.org/client/en_US/dcpl/search/detailnonmodal/ent:$002f$002fERC_222_3048$002f0$002f222_3048:OVERDRIVE:d7f3cfad-d675-47a2-8990-65ce544d5ec1/ada?qu=djinn+patrol+on+the+purple+line&d=ent%3A%2F%2FERC_222_3048%2F0%2F222_3048%3AOVERDRIVE%3Ad7f3cfad-d675-47a2-8990-65ce544d5ec1%7EERC_ST_DCPL%7E1&h=8'},
-        // {title:'Title3', author:'Author 3', NYTRank: 2, DCHolds: 2, ISBN: 9780393062625, DCUrl: 'https://catalog.dclibrary.org/client/en_US/dcpl/search/detailnonmodal/ent:$002f$002fERC_222_3048$002f0$002f222_3048:OVERDRIVE:d7f3cfad-d675-47a2-8990-65ce544d5ec1/ada?qu=djinn+patrol+on+the+purple+line&d=ent%3A%2F%2FERC_222_3048%2F0%2F222_3048%3AOVERDRIVE%3Ad7f3cfad-d675-47a2-8990-65ce544d5ec1%7EERC_ST_DCPL%7E1&h=8'}
+     
       ],
       date: 'YYYY-MM-DD'
   }
@@ -53,8 +51,7 @@ class App extends React.Component {
 parseNYTBooks(json){
   //this function takes in raw JSON data from NYT bestseller API and saves it to state
 const obj = json;
-let basicbookdata= {};
-
+let basicbookdata= [];
 const booklistsize = Object.keys(obj).length;
   if (!obj){
       console.log("problem") //if there's no json object here, we have a problem
@@ -67,9 +64,10 @@ const booklistsize = Object.keys(obj).length;
       let bookTitle = titleCase(obj.results.books[i].title);
       let bookAuthor = obj.results.books[i].author;
       let rank = obj.results.books[i].rank;
+      let isbn = obj.results.books[i].isbns[0].isbn13;
     //  //put in title case because formatting
-    //   bookTitle = titleCase(bookTitle);
-      basicbookdata[i] = {'title': bookTitle, 'author': bookAuthor, 'NYTRank': rank};
+       bookTitle = titleCase(bookTitle);
+      basicbookdata[i] = {'title': bookTitle, 'author': bookAuthor, 'NYTRank': rank, 'ISBN':isbn};
       }
     // this.setState({books: basicbookdata})
     return basicbookdata;
@@ -91,43 +89,43 @@ const booklistsize = Object.keys(obj).length;
   
   }
   //now walk through the DCLibrary DOM to find the information we need
-async parsebooks(result, index, booksfromNYT){
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(result,"text/html")
-      console.log(dom);
-      let DCLibraryparams = {};
-      let available;
-      let currentBooks = booksfromNYT;    
-     //now we check to make sure it's not too popular     
-     const holdscount = dom.getElementsByClassName('holdsCountNumber')[0].innerHTML;
-     console.log(holdscount);
-     if (!holdscount){
-        available = dom.getElementsByClassName('availableNumber')[0].innerHTML;
-        console.log(available);
-     }
-     if (holdscount < 5 || available > 0){
-     const authorBackwards = dom.getElementsByClassName('searchlink')[0].getElementsByTagName('a')[0].innerHTML;
-      //check to make sure we have the right book (sometimes DCPL search just gives us crazy results)
-      let author = reverseAuthor(authorBackwards).trim();
-      if (!Object.values(booksfromNYT[index]).includes(author)){
-        //don't continue
-       return currentBooks;
-      }
-     const format = dom.getElementsByClassName('formatText')[0].innerHTML;
-     const bookUrl = dom.getElementsByClassName('detailLink')[0].getAttribute('href');
-     const ISBN = dom.getElementsByClassName('isbnValue')[0].getAttribute('value')
-     console.log(holdscount,author,format,bookUrl)  
-     DCLibraryparams = {'DCHolds': holdscount, 'DCUrl':bookUrl, 'ISBN': ISBN, 'DCAvail':available}
-     const intermediateBookObj = Object.assign(currentBooks[index], DCLibraryparams)
-     currentBooks[index] = intermediateBookObj;
-    console.log(currentBooks)
-     return currentBooks;
+// async parsebooks(result, index, booksfromNYT){
+//       const parser = new DOMParser();
+//       const dom = parser.parseFromString(result,"text/html")
+//       console.log(dom);
+//       let DCLibraryparams = {};
+//       let available;
+//       let currentBooks = booksfromNYT;    
+//      //now we check to make sure it's not too popular     
+//      const holdscount = dom.getElementsByClassName('holdsCountNumber')[0].innerHTML;
+//      console.log(holdscount);
+//      if (!holdscount){
+//         available = dom.getElementsByClassName('availableNumber')[0].innerHTML;
+//         console.log(available);
+//      }
+//      if (holdscount < 5 || available > 0){
+//      const authorBackwards = dom.getElementsByClassName('searchlink')[0].getElementsByTagName('a')[0].innerHTML;
+//       //check to make sure we have the right book (sometimes DCPL search just gives us crazy results)
+//       let author = reverseAuthor(authorBackwards).trim();
+//       if (!Object.values(booksfromNYT[index]).includes(author)){
+//         //don't continue
+//        return currentBooks;
+//       }
+//      const format = dom.getElementsByClassName('formatText')[0].innerHTML;
+//      const bookUrl = dom.getElementsByClassName('detailLink')[0].getAttribute('href');
+//      const ISBN = dom.getElementsByClassName('isbnValue')[0].getAttribute('value')
+//      console.log(holdscount,author,format,bookUrl)  
+//      DCLibraryparams = {'DCHolds': holdscount, 'DCUrl':bookUrl, 'ISBN': ISBN, 'DCAvail':available}
+//      const intermediateBookObj = Object.assign(currentBooks[index], DCLibraryparams)
+//      currentBooks[index] = intermediateBookObj;
+//     console.log(currentBooks)
+//      return currentBooks;
     
-     }
-     else {
-       return currentBooks;
-      }
-     }
+//      }
+//      else {
+//        return currentBooks;
+//       }
+//      }
   
   
   async main(){
@@ -138,46 +136,52 @@ async parsebooks(result, index, booksfromNYT){
 
   //turn that json into an object and set it to state
   const booksfromNYT = await this.parseNYTBooks(jsonString);
+  console.log(booksfromNYT)
+const booksfromOL = await this.getOpenLibraryBookData(booksfromNYT)
   
-  for(let i = 0; i<10; i++){
-    console.log(`matchedBooks before going to DCPL: ${matchedBooks}`)
-      if (!(matchedBooks.length) || matchedBooks.length<3){
-        console.log('inside DCPL loop for the ' + i + 'th time, now what')
-  let matchedBookDOM = await this.searchDCPL(booksfromNYT, i);
-  matchedBooks = await this.parsebooks(matchedBookDOM, i, booksfromNYT);
-  console.log(matchedBooks)
       }
-  }
   
   
-  }
   
 
 //THIS function takes an ISBN and returns an "Open Library ID" to fetch yet more metadata on books and append it to our book object
-  async getOpenLibraryBookData() {
-    let currentBooks = this.state.books;
+  async getOpenLibraryBookData(currentBooks) {
+    console.log('im just a girl, standing in front of an open library api, begging it to respond')
+    console.log(currentBooks.length);
 for (let i = 0; i<currentBooks.length; i++){
     const isbn = currentBooks[i].ISBN;
+    console.log(`gonna try this isbn next ${isbn}`);
    let OLid;
+   let description;
     const bookurl = `https://openlibrary.org/isbn/${isbn}.json`
     const OLresponse = await fetch (bookurl);
     if (OLresponse.ok){
       
-const OLData = await OLresponse.json();  
-console.log(OLData);
+    const OLData = await OLresponse.json();  
+    
     OLid = OLData.works[0].key;
     const numPages = OLData.number_of_pages;
 const OLurl = `https://openlibrary.org${OLid}.json`;
     const response = await fetch (OLurl);
     if(response.ok){
-    const olJSON = response.json();
-    const description = olJSON.description;
+    const olJSON = await response.json();
+    try {
+    description = olJSON.description.value;
+    }
+    catch(err) {
+      description = '';
+      console.log(err)
+    }
 
       const newParams = {'OLID': OLid, 'numPages':numPages, 'description': description }
+
       const bookObj = Object.assign(currentBooks[i], newParams)
       currentBooks[i] = bookObj;
-    }
+      console.log(bookObj)
+    
       this.setState({books: currentBooks})
+      console.log(this.state.books)
+    }
   }
   }
   }

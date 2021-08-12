@@ -59,7 +59,8 @@ button {
 
 .Results {
   display:flex;
-  justify-content: space-around;
+  justify-content: center;
   padding-top:2rem;
   min-height:500px;
+  flex-wrap:wrap;
 }
