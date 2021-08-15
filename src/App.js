@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 import logo from './logo.jpg';
 import './App.css';
-import Results from './Results'
+import Results from './Results';
 
 //import helper functions here
 import {titleCase, reverseAuthor, randomDateYYYYMMDD,shortenDescription} from "./helpers.js"

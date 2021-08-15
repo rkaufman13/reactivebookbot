@@ -1,10 +1,50 @@
 .bookresult {
-    background-color: #011f0c;
+    background-color: #F2EDD7;
     padding:2rem;
     margin:.5rem;
-    max-width: 215px;
+    flex:1 1 15%;
+    border-radius: 15px;
+    color:black;
+    display:flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    max-width:250px;
 }
 
-a {
-    color:lightgrey
+.bookresult:hover {
+    background-color: rgba(242, 237, 215, 0.7);
 }
+
+.bookresult h3 {
+    margin:2px auto 0px auto;
+    font-size: 1.5rem;
+    
+}
+
+.bookbutton {
+        font-size: .75rem;
+        width:14rem;
+      }
+
+
+a {
+    color:#5F939A;
+}
+
+.cover {
+    object-fit:fill;
+    width:100%;
+    max-height:335px;
+}
+
+.bookCover {
+    margin:.5rem;
+   width:90%;
+   height:auto;
+    overflow:hidden;
+    text-align: center;
+    vertical-align: top;
+    
+}
+

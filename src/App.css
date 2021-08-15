@@ -33,8 +33,8 @@ transform: translateX(-50%);
 }
 
 .main {
-  background-color:darkslategray;
-  color:white;
+  background-color:#A0937D;
+  color:black;
   width:100%;
   padding:2rem 0rem;
 }
@@ -44,7 +44,7 @@ button {
     width: 11rem;
     padding: 1rem .66rem;
     border-radius: 54px;
-    background-color: #011f0c;
+    background-color: #5F939A;
     text-align: center;
     font-size: 1rem;
     transition: background-color .25s;
@@ -54,7 +54,7 @@ button {
   }
   
   button:hover {
-    background-color: rgba(73, 138, 96, 0.7);
+    background-color: rgba(58,99,81, 0.7);
   }
 
 .bookResults {
@@ -63,6 +63,7 @@ button {
   padding-top:2rem;
   min-height:500px;
   flex-wrap:wrap;
+  
 }
 
 .Results{

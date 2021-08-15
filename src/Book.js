@@ -16,7 +16,7 @@ getCover(){
 }
 handleImageLoad(){
   for (let i = 0; i<document.getElementsByClassName('cover').length;i++){
-    if (document.getElementsByClassName('cover')[i].width===1){
+    if (document.getElementsByClassName('cover')[i].naturalWidth===1){
       document.getElementsByClassName('cover')[i].src = "placeholder.png"
     }
   }
@@ -35,13 +35,13 @@ return endpoint;
 render(){
   return  (<div className="bookresult">
     <h3>{this.props.book.title}</h3>
-    <br/>
-    <img src={this.getCover()} alt={this.props.book.title}  onLoad={this.handleImageLoad} className="cover"/>
-    <br/>
     <p>{this.props.book.author}</p>
-    <p>(<a href={this.getLibraryUrl()}>Search DCPL for this book</a>)</p>
-    <p>{this.props.book.description || "No description available"}</p>
-    <p>Number of pages: {this.props.book.numPages || "Not available"}</p>
+    
+    <div className="bookCover"><img src={this.getCover()} alt={this.props.book.title}  onLoad={this.handleImageLoad} className="cover"/></div>
+    <br/>
+    <p><form method="post" action={this.getLibraryUrl()}><button className="bookbutton">Search DCPL for this book</button></form></p>
+    <p class="description">{this.props.book.description || "No description available"}</p>
+    <p class="description">{this.props.book.numPages?"Number of pages:"+this.props.book.numPages:""}</p>
 
 </div>
     )
