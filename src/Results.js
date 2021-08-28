@@ -1,18 +1,15 @@
 import React from 'react';
-import Book from './Book';
+import {Book} from './Book';
 
 
-class Results extends React.Component{
-
-
-    render(){
+export const Results = (props) => {
         return (
 <div className="Results">
-    {this.props.date === 'YYYY-MM-DD'? (''):(<span>
-    <h3>The NYT Bestsellers for {this.props.date}</h3>
+    {props.date === 'YYYY-MM-DD'? (''):(<span>
+    <h3>The NYT Bestsellers for {props.date}</h3>
     </span>)}
     <div className="bookResults">
-{this.props.Books.map(book => {
+{props.Books.map(book => {
           return(
            <Book book={book} key={book.ISBN}
             />
@@ -25,7 +22,3 @@ class Results extends React.Component{
 
         )
     }
-
-}
-
-export default Results;

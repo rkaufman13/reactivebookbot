@@ -1,3 +1,5 @@
+
+
 function titleCase(title){
     title = title.toLowerCase();
     
@@ -46,6 +48,8 @@ function shortenDescription(desc){
     shortDesc = shortDesc+ "...";
     return shortDesc;
 }
+
+
 
 
 export {titleCase,reverseAuthor, randomDateYYYYMMDD,shortenDescription}
